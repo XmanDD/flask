@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>文件上传</title>
+</head>
+<body>
+<form>
+    <input type="hidden" name="url">
+    <input name="name" placeholder="图片名称">
+    <div id="preImgDiv">
+        <button type="button" onclick="file.click()">选择图片</button><br>
+        <img id="preImg" src="/static/images/ms1.jpg"  width="200" height="200">
+    </div>
+    <button type="button">提交</button>
+</form>
+<input id="file" type="file" onchange="uploadImg(this.files[0])">
+<script src="/static/js/jquery.min.js"></script>
+<script>
+    function uploadImg(file) {
+        alert('正在上传图片')
+        var formdata = new FormData()
+        formdata.append('img',file);
+        $.ajax('/upload/',{
+            type:'post',
+            data:formdata,
+            contentType:false,
+            processData:false,
+            dataType:'json',
+            success:function(data){
+                alert(data.msg);
+                console.log(data);
+
+                $('#preImg').attr('src',data.path);
+
+                $('form > input[name="url"]').val(data.path)
+            }
+        })
+    }
+</script>
+</body>
+</html>
